@@ -15,6 +15,23 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
+async function run() {
+  try {
+    await client.connect();
+    const database = client.db("travelDb");
+    const serviceCollection = database.collection("services");
+    //load or get all data from database
+    app.get("/services", async (req, res) => {
+      const cursor = serviceCollection.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+  } finally {
+    //   await client.close();
+  }
+}
+run().catch(console.dir);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
