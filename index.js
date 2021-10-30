@@ -21,6 +21,7 @@ async function run() {
     await client.connect();
     const database = client.db("travelDb");
     const serviceCollection = database.collection("services");
+    const orderCollection = database.collection("orders");
     //load or get all data from database
     app.get("/services", async (req, res) => {
       const cursor = serviceCollection.find({});
@@ -33,6 +34,41 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await serviceCollection.findOne(query);
       res.send(result);
+    });
+    //insert Booking
+    app.post("/orders", async (req, res) => {
+      const customerInfo = req.body;
+      console.log(customerInfo);
+      const result = await orderCollection.insertOne(customerInfo);
+      res.json(result);
+    });
+    //get myBooking
+    app.get("/myOrders", async (req, res) => {
+      const cursor = orderCollection.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    //delete mybooking
+    app.delete("/myOrders/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    });
+    //insert new Service
+    app.post("/addUser", async (req, res) => {
+      const newServiceInfo = {
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        Duration: req.body.Duration,
+        price: req.body.price,
+        picture: req.body.picture,
+        about: req.body.about,
+      };
+      console.log(newServiceInfo);
+      const result = await serviceCollection.insertOne(newServiceInfo);
+      res.json(result);
     });
   } finally {
     //   await client.close();
