@@ -38,7 +38,6 @@ async function run() {
     //insert Booking
     app.post("/orders", async (req, res) => {
       const customerInfo = req.body;
-      console.log(customerInfo);
       const result = await orderCollection.insertOne(customerInfo);
       res.json(result);
     });
@@ -66,7 +65,6 @@ async function run() {
         picture: req.body.picture,
         about: req.body.about,
       };
-      console.log(newServiceInfo);
       const result = await serviceCollection.insertOne(newServiceInfo);
       res.json(result);
     });
@@ -86,7 +84,6 @@ async function run() {
         updateDoc,
         options
       );
-      console.log(result);
       res.json(result);
     });
   } finally {
